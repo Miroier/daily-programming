@@ -2,12 +2,12 @@
 #include "queue"
 using namespace std;
 int n, m, k, q;
-int a[1010];
-int b[1010];
-queue<int> que[30];
-int st[1010];
-int ed[1010];
-int times;
+int a[1010];        //k个客户
+int b[1010];        //q个询问
+queue<int> que[30]; //窗口
+int st[1010];       //开始服务时间
+int ed[1010];       //结束服务时间
+int times;          //全局时间
 void inp()
 {
     cin >> n >> m >> k >> q;
