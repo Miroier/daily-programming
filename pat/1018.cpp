@@ -101,7 +101,8 @@ void dfs(int x)
         //         }
         //     }
         // }
-        // for (int i = 0; i < cnt - 1; i++)    // 题意没说清，用下面的只有25分，猜测在一些情况下，有可能need和back都大于0，
+        // 题意没说清，用下面的只有25分，猜测在一些情况下，有可能need和back都大于0
+        // for (int i = 0; i < cnt - 1; i++)
         //     printf("need:%d back=%d\n", need, back);
         // sum += bike[tmpPath[i]];
         // int need = max(0, (cnt - 1) * Cmax / 2 - sum);
