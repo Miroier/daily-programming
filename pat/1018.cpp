@@ -73,26 +73,34 @@ void dfs(int x)
     {
         int sum = 0;
         int need = 0, back = 0;
-        for (int i = cnt - 1; i >= 0; i--) //这里只能从0出发
+        for (int i = cnt - 1; i >= 0; i--)
         {
-            int id = tmpPath[i];
-            if (bike[id] > 0) //bike提前在输入时处理
-            {
-                back += bike[id];
-            }
-            else
-            {
-                if (back > (0 - bike[id]))
-                {
-                    back += bike[id];
-                }
-                else
-                {
-                    need += ((0 - bike[id]) - back);
-                    back = 0;
-                }
-            }
+            sum += bike[tmpPath[i]];
+            if (sum < need)
+                need = sum;
         }
+        need = 0 - need;
+        back = sum + need;
+        // for (int i = cnt - 1; i >= 0; i--) //这里只能从0出发
+        // {
+        //     int id = tmpPath[i];
+        //     if (bike[id] > 0) //bike提前在输入时处理
+        //     {
+        //         back += bike[id];
+        //     }
+        //     else
+        //     {
+        //         if (back > (0 - bike[id]))
+        //         {
+        //             back += bike[id];
+        //         }
+        //         else
+        //         {
+        //             need += ((0 - bike[id]) - back);
+        //             back = 0;
+        //         }
+        //     }
+        // }
         // for (int i = 0; i < cnt - 1; i++)    // 题意没说清，用下面的只有25分，猜测在一些情况下，有可能need和back都大于0，
         //     printf("need:%d back=%d\n", need, back);
         // sum += bike[tmpPath[i]];
