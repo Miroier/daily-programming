@@ -17,7 +17,7 @@ LL gcd(LL x, LL y)
 }
 LL lcm(LL x, LL y)
 {
-    return x * y / gcd(x, y);
+    return x / gcd(x, y) * y;
 }
 int main()
 {
