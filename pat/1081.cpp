@@ -55,7 +55,7 @@ int main()
     bool flag = 0;
     if (comup == 0)
         cout << "0";
-    if (abs(comup) > comlow)
+    if (abs(comup) >= comlow)
     {
         cout << comup / comlow;
         comup %= comlow;
