@@ -2,6 +2,7 @@
 #include "vector"
 using namespace std;
 vector<int> in, pre, post;
+int cnt = 1;
 void getPost(int preL, int preR, int inL, int inR)
 {
     if (preL > preR)
@@ -11,7 +12,7 @@ void getPost(int preL, int preR, int inL, int inR)
         i++;
     getPost(preL + 1, preL + (i - inL), inL, i - 1);
     getPost(preL + (i - inL) + 1, preR, i + 1, inR);
-    post[preR] = pre[preL];
+    post[cnt++] = pre[preL];
 }
 int main()
 {
@@ -25,8 +26,7 @@ int main()
     in.resize(n + 1);
     post.resize(n + 1);
     for (int i = 1; i <= n; i++)
-        cin >>
-            pre[i];
+        cin >> pre[i];
     for (int i = 1; i <= n; i++)
         cin >> in[i];
     getPost(1, n, 1, n);
