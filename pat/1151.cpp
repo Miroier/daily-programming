@@ -8,7 +8,6 @@ using namespace std;
  */
 int m, n;
 vector<int> pre, in, post;
-int cnt = 0;
 unordered_map<int, int> mp;
 unordered_map<int, bool> ex;
 struct node
