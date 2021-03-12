@@ -126,27 +126,20 @@ void work()
     dfsdis(ed);
     Dtime(st);
     dfstime(ed);
-    printf("Distance = %d", dis[ed]);
     if (pathdis == pathtime)
     {
-        printf("; Time = %d: ", timewei[ed]);
+        printf("Distance = %d; Time = %d: ", dis[ed], timewei[ed]);
+        for (int i = 0; i < pathdis.size(); i++)
+            cout << pathdis[i] << (i < pathdis.size() - 1 ? " -> " : "\n");
     }
     else
     {
-        cout << ": ";
+        printf("Distance = %d: ", dis[ed]);
         for (int i = 0; i < pathdis.size(); i++)
-        {
-            if (i != 0)
-                cout << " -> ";
-            cout << pathdis[i];
-        }
-        printf("\nTime = %d: ", timewei[ed]);
-    }
-    for (int i = 0; i < pathtime.size(); i++)
-    {
-        if (i != 0)
-            cout << " -> ";
-        cout << pathtime[i];
+            cout << pathdis[i] << (i < pathdis.size() - 1 ? " -> " : "\n");
+        printf("Time = %d: ", timewei[ed]);
+        for (int i = 0; i < pathtime.size(); i++)
+            cout << pathtime[i] << (i < pathtime.size() - 1 ? " -> " : "\n");
     }
 }
 int main()
