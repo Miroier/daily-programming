@@ -9,13 +9,7 @@
     2
     .
     n
-    从n行里选m行,使得每一列都至少有一个1，这样的话，所有的食材都确定了出发点
-    状压DP
-    状态表示
-        f[i]表示要送i（i是二进制数，表示状态）食材需要多少检查点
-    状态计算
-        f[i | state[j]] = min(f[i | state[j]], f[i] + 1)
-        i | state[j]表示在i基础上加入检查点j时能送的食材，如果之前已经算过这种状态f[i | state[j]，会让它和f[i]+1做比较，取最小值
+    从n行里选m行,使得每一列都至少有一个1，表示所有食材都能送到
  */
 using namespace std;
 #define x first
@@ -25,12 +19,21 @@ const int N = 105, M = 10, S = 1 << M;
 
 int n, m, k;
 int need[N][M];
-int h[N], e[2 * N], w[2 * N], ne[2 * N], idx; //链式前向星
+struct node
+{
+    int to;
+    int w;
+    int next;
+} Edge[N];
+int h[N], idx; //链式前向星
 int d[N][M];
 int f[S], state[N];
 void add(int a, int b, int c)
 {
-    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx++;
+    Edge[idx].to = b;
+    Edge[idx].w = c;
+    Edge[idx].next = h[a];
+    h[a] = idx++;
 }
 void inp()
 {
@@ -46,21 +49,24 @@ void inp()
         add(a, b, c), add(b, a, c);
     }
 }
+bool vis[N];
 PII dfs(int u, int fa, int v)
 {
     PII res(0, -1);
     if (need[u][v])
         res.y = 0;
-    for (int i = h[u]; ~i; i = ne[i])
+    vis[u] = true;
+    for (int i = h[u]; ~i; i = Edge[i].next)
     {
-        int j = e[i];
-        if (j == fa)
-            continue;
-        auto t = dfs(j, u, v);
-        if (t.y != -1)
+        int j = Edge[i].to;
+        if (!vis[j])
         {
-            res.x += t.x + w[i] * 2;
-            res.y = max(res.y, t.y + w[i]);
+            auto t = dfs(j, u, v);
+            if (t.y != -1) //如果这个酒店对该食材有要求
+            {
+                res.x += t.x + Edge[i].w * 2;
+                res.y = max(res.y, t.y + Edge[i].w);
+            }
         }
     }
     return res;
@@ -72,11 +78,11 @@ bool check(int mid)
         for (int j = 0; j < k; j++)
             if (d[i][j] <= mid)
                 state[i] |= 1 << j;  //state[i]表示哪些食材可以从酒店i出发
-    memset(f, 0x3f, sizeof f);       // f[i]表示要送i（i是二进制数）食材需要最少的检查点
-    f[0] = 0;                        //一列也没有选时个数是0
-    for (int i = 0; i < 1 << k; i++) //枚举所有状态
-        for (int j = 1; j <= n; j++) //对于每个酒店
-                                     //i | state[j]表示在i基础上加入检查点j时能送的食材，如果之前已经算过这种状态f[i | state[j]，会让它和f[i]+1做比较，取最小值
+    memset(f, 0x3f, sizeof f);       // f[i]表示对于
+    f[0] = 0;                        //一行也没有选时个数是0
+    for (int i = 0; i < 1 << k; i++) //枚举所有行的组合
+        for (int j = 1; j <= n; j++) //对于每个行
+                                     //i | state[j]表示
             f[i | state[j]] = min(f[i | state[j]], f[i] + 1);
     return f[(1 << k) - 1] <= m;
 }
@@ -85,6 +91,7 @@ void work()
     for (int i = 1; i <= n; i++)
         for (int j = 0; j < k; j++)
         {
+            fill(vis, vis + N, false);
             auto t = dfs(i, -1, j);
             if (t.y != -1)
                 d[i][j] = t.x - t.y; //t.x是所有关键边的两倍之和 t.y是距离第i个点最远的点 d[i][j]表示第j个食材从点i出发运送完的时间
