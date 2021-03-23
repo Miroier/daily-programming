@@ -1,36 +1,73 @@
 #include "algorithm"
+#include "cstdio"
 #include "iostream"
-#include "map"
+#include "vector"
 using namespace std;
+int m;
 
-#define x first
-#define y second
+struct stu
+{
+    int y;
+    bool result;
+    void inp()
+    {
+        cin >> y >> result;
+    }
+};
+stu s[100005];
 
-typedef pair<int, int> PII;
+bool cmp(stu a, stu b)
+{
+    if (a.y != b.y)
+        return a.y < b.y;
+    else
+        return a.result < b.result;
+}
+int ind;
+int res;
+bool index[100005];
 
-PII a[100005];
-int s[2][100005];
+struct sum
+{
+    int y;
+    int sum0;
+    int sum1;
+};
+vector<sum> v;
 
 int main()
 {
-    int n;
-    cin >> n;
-    for (int i = 1; i <= n; i++)
-        cin >> a[i].x >> a[i].y;
-
-    sort(a + 1, a + n + 1);
-    for (int i = 0; i < 2; i++)
-        for (int j = 1; j <= n; j++)
-            s[i][j] = s[i][j - 1] + (a[j].y == i);
-
-    int ind = 0, mx = 0;
-    for (int i = 1; i <= n; i++)
+    s[0].y = -1;
+    cin >> m;
+    for (int i = 1; i <= m; i++)
     {
-        int tmp = s[0][i - 1] + s[1][n] - s[1][i - 1];
-        if (tmp >= mx)
-            mx = tmp, ind = a[i].x;
-        while (i + 1 <= n && a[i + 1].x == a[i].x)
-            i++;
+        s[i].inp();
+    }
+    sort(s + 1, s + 1 + m, cmp);
+    int count = -1;
+    for (int i = 1; i <= m; i++)
+    {
+        if (s[i].y != s[i - 1].y)
+            v.push_back(sum{s[i].y, 0}), count++;
+        v[count].sum0 += 1 - s[i].result;
+        v[count].sum1 += s[i].result;
+    }
+    for (int i = 1; i < v.size(); i++)
+    {
+        v[i].sum0 += v[i - 1].sum0;
+        v[i].sum1 += v[i - 1].sum1;
+    }
+    for (int i = 0; i < v.size(); i++)
+    {
+        int cnt = 0;
+        if (i > 0)
+            cnt += v[i - 1].sum0;
+        cnt += v[v.size() - 1].sum1 - v[i].sum1;
+        if (res <= cnt)
+        {
+            res = cnt;
+            ind = v[i].y;
+        }
     }
     cout << ind;
 }
