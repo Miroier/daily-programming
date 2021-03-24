@@ -1,54 +1,98 @@
-#include <iostream>
-#include <cstdio>
-#include <string>
+/*
+	矩阵快速幂
+ */
+#include "algorithm"
+#include "cstring"
+#include "iostream"
+#include "string"
+#include "vector"
 using namespace std;
 typedef long long LL;
+const int N = 14, MOD = 998244353;
+
 int n;
-string s;
-string a="1";
-int pow(int a,int b){
-	int ans=1;
-	while(b){
-		if(b&1)
-			ans=ans*a;
-		a*=a;
-		b>>=1;
-	}
-	return ans; 
+string S;
+int id[100];
+vector<int> vers{
+	1, 2, 4, 6, 16, 26, 41, 42, 44, 46, 61, 62, 64, 66};
+vector<vector<int>> g{
+	{2}, {4}, {1, 6, 16}, {6, 4, 64}, {26}, {46}, {62}, {64}, {61}, {66}, {42}, {44}, {41}, {46}};
+int tr[N][N];
+void init()
+{
+	memset(id, -1, sizeof id);
+	for (int i = 0; i < N; i++)
+		id[vers[i]] = i;
+	for (int i = 0; i < N; i++)
+		for (auto x : g[i])
+			tr[i][id[x]]++;
 }
-string num2str(int x){
-	int a[10];
-	int cnt=0;
-	string ans="";
-	while(x){
-		a[cnt++]=x%10;
-		x/=10;
-	}
-	cnt--;
-	for(int i=cnt;i>=0;i--)
-		ans+='0'+a[i];
-	return ans;
+void mul(int c[][N], int a[][N], int b[][N])
+{
+	static int tmp[N][N];
+	memset(tmp, 0, sizeof tmp);
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			for (int k = 0; k < N; k++)
+				tmp[i][j] = (tmp[i][j] + (LL)a[i][k] * b[k][j]) % MOD;
+	memcpy(c, tmp, sizeof tmp);
 }
-LL cnt;
-int main(){
-	scanf("%d\n",&n);
-	cin>>s;
-	while(n--){
-		string b="";
-		for(int i=0;i<a.size();i++){
-			int tmp=a[i]-'0';
-			tmp=pow(2,tmp);
-			b+=num2str(tmp);
+int qmi(int k, int id)
+{
+	if (id == -1)
+		return 0;
+	int res[N][N] = {0}, w[N][N];
+	memcpy(w, tr, sizeof w);
+	res[0][0] = 1;
+	while (k)
+	{
+		if (k & 1)
+			mul(res, res, w);
+		mul(w, w, w);
+		k >>= 1;
+	}
+	return res[0][id];
+}
+string get(string str)
+{
+	string res;
+	for (int i = 0; i < str.size(); i++)
+		if (str[i] == '2') // 1 -> 2
+			res += '1';
+		else if (str[i] == '4') // 2 -> 4
+			res += '2';
+		else if (str[i] == '1') // 4 -> 16
+		{
+			if (i + 1 == str.size() || str[i + 1] == '6')
+				res += '4', i++;
+			else
+				return "";
 		}
-		a=b;
-		cout<<a.size()<<endl;
+		else // 6 -> 64
+		{
+			if (i + 1 == str.size() || str[i + 1] == '4')
+				res += '6', i++;
+			else
+				return "";
+		}
+	return res;
+}
+int dfs(int k, string &str)
+{
+	if (str.size() <= 2)
+		return qmi(k, id[stoi(str)]);
+	int res = 0;
+	for (string s : {"", "1", "6"}) //首位是6，可以在前面补1，首位是4，可以在前面补6，其他情况不补
+	{
+		auto t = get(s + str);
+		if (t.size())
+			res = (res + dfs(k - 1, t)) % MOD;
 	}
-	int pos=a.find(s);
-	while(pos!=-1){
-		cnt++;
-		if(cnt==998244353)
-			cnt=0;
-		pos=a.find(s,pos+1);
-	}
-	cout<<cnt;
-} 
+	return res;
+}
+int main()
+{
+	init();
+	cin >> n >> S;
+	cout << dfs(n, S) << endl;
+}
