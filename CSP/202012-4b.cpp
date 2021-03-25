@@ -1,16 +1,6 @@
 #include "algorithm"
 #include "cstring"
 #include "iostream"
-/*
-    先预处理出d[i,j]表示从i出发走完所有包含j的点的最短距离
-    想象一个二维01矩阵，表示是否满足d[i,j]<=dis，这个dis是将来要二分的距离
-        0 1 2 ... k-1
-    1
-    2
-    .
-    n
-    从n行里选m行,使得每一列都至少有一个1，表示所有食材都能送到
- */
 using namespace std;
 #define x first
 #define y second
