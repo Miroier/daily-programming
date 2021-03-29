@@ -28,7 +28,6 @@ int main(){
 		else
 			v[ind].second++;
 	}
-	cout<<maxlen<<endl;
 	for(int i=0;i<v.size();i++){
 		for(int j=0;j<maxlen-v[i].first.size();j++)
 			cout<<" ";
