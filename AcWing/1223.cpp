@@ -20,6 +20,7 @@
 
 //我们这里要用更相减损术的是指数，所以要让(p/q)^x1,(p/q)^x2,...,(p/q)^x(N-1)，两两计算，互除，除到结果为1,即x1=x2,此时幂次为0，结果为1，这其实就是y总的思路，再次感叹y总的才华
 //把分子分母分别去算，结果是相同的因为，分子分母的幂次是相同的
+#include "algorithm"
 #include "iostream"
 using namespace std;
 typedef long long LL;
@@ -42,7 +43,8 @@ int main()
 {
     cin >> n;
     for (int i = 0; i < n; i++)
-        cin >> a[i];
+        cin >> x[i];
+    sort(x, x + n);
     int cnt = 0;
     for (int i = 1; i < n; i++)
         if (x[i] != x[i - 1])
