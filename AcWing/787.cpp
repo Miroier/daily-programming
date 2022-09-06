@@ -1,41 +1,41 @@
-#include "iostream"
+#include <iostream>
 using namespace std;
+
+const int N = 1e5 + 10;
 int n;
-int a[100005];
-int tmp[100005];
-void mergesort(int left, int right)
+int q[N], tmp[N];
+
+void merge_sort(int q[], int l, int r)
 {
-    if (left >= right)
+    if (l >= r)
         return;
-    int mid = (left + right) >> 1;
-    mergesort(left, mid);
-    mergesort(mid + 1, right);
-    int i = left, j = mid + 1;
-    int cnt = left;
-    while (i <= mid && j <= right)
+    int mid = l + r >> 1;
+    merge_sort(q, l, mid);
+    merge_sort(q, mid + 1, r);
+    int i = l, j = mid + 1, k = 0;
+    while (i <= mid && j <= r)
     {
-        if (a[i] < a[j])
-            tmp[cnt++] = a[i++];
+        if (q[i] <= q[j])
+            tmp[k++] = q[i++];
         else
-            tmp[cnt++] = a[j++];
+            tmp[k++] = q[j++];
     }
     while (i <= mid)
-        tmp[cnt++] = a[i++];
-    while (j <= right)
-        tmp[cnt++] = a[j++];
-    for (int i = left; i <= right; i++)
-        a[i] = tmp[i];
+        tmp[k++] = q[i++];
+    while (j <= r)
+        tmp[k++] = q[j++];
+    for (int i = l, j = 0; i <= r; i++, j++)
+        q[i] = tmp[j];
 }
+
 int main()
 {
-#ifdef ONLINE_JUDGE
-#else
-    freopen("input.txt", "r", stdin);
-#endif
     cin >> n;
-    for (int i = 1; i <= n; i++)
-        cin >> a[i];
-    mergesort(1, n);
-    for (int i = 1; i <= n; i++)
-        cout << a[i] << " ";
+    for (int i = 0; i < n; i++)
+        cin >> q[i];
+
+    merge_sort(q, 0, n - 1);
+
+    for (int i = 0; i < n; i++)
+        cout << q[i] << " ";
 }

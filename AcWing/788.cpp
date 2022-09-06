@@ -1,33 +1,34 @@
-#include "iostream"
+#include <iostream>
 using namespace std;
-typedef long long LL;
+
+const int N = 1e5 + 10;
 int n;
-int a[100005];
-int tmp[100005];
-LL cnt = 0;
-void mergesort(int left, int right)
+int a[N], tmp[N];
+long long cnt;
+
+void merge_sort(int l, int r)
 {
-    if (left >= right)
+    if (l >= r)
         return;
-    int mid = (left + right) >> 1;
-    mergesort(left, mid);
-    mergesort(mid + 1, right);
-    int i = left, j = mid + 1;
-    int ind = left;
-    while (i <= mid && j <= right)
+    int mid = l + r >> 1;
+    merge_sort(l, mid);
+    merge_sort(mid + 1, r);
+    int i = l, j = mid + 1, k = l;
+    while (i <= mid && j <= r)
     {
         if (a[i] <= a[j])
-            tmp[ind++] = a[i++];
+            tmp[k++] = a[i++];
         else
-            tmp[ind++] = a[j++], cnt += mid - i + 1;
+            tmp[k++] = a[j++], cnt += mid - i + 1; //计算逆序对
     }
     while (i <= mid)
-        tmp[ind++] = a[i++];
-    while (j <= right)
-        tmp[ind++] = a[j++];
-    for (int i = left; i <= right; i++)
+        tmp[k++] = a[i++];
+    while (j <= r)
+        tmp[k++] = a[j++];
+    for (int i = l; i <= r; i++)
         a[i] = tmp[i];
 }
+
 int main()
 {
 #ifdef ONLINE_JUDGE
@@ -35,8 +36,8 @@ int main()
     freopen("input.txt", "r", stdin);
 #endif
     cin >> n;
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < n; i++)
         cin >> a[i];
-    mergesort(1, n);
+    merge_sort(0, n - 1);
     cout << cnt;
 }

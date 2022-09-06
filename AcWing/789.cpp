@@ -1,45 +1,44 @@
-#include "iostream"
+#include <iostream>
 using namespace std;
+
+const int N = 1e5 + 10;
+int a[N];
 int n, q;
-int a[100005];
+
 int main()
 {
-#ifdef ONLINE_JUDGE
-#else
-    freopen("input.txt", "r", stdin);
-#endif
     cin >> n >> q;
     for (int i = 0; i < n; i++)
         cin >> a[i];
-    int x;
     while (q--)
     {
+        int x;
         cin >> x;
         int left = 0, right = n - 1;
         while (left < right)
         {
-            int mid = (left + right) / 2;
-            if (a[mid] >= x)
-                right = mid;
-            else
+            int mid = left + right >> 1;
+            if (a[mid] < x)
                 left = mid + 1;
+            else
+                right = mid;
         }
         if (a[left] == x)
             cout << left << " ";
         else
-            cout << -1 << " ";
+            cout << "-1 ";
         left = 0, right = n - 1;
         while (left < right)
         {
-            int mid = (left + right + 1) / 2;
-            if (a[mid] <= x)
-                left = mid;
-            else
+            int mid = left + right + 1 >> 1;
+            if (a[mid] > x)
                 right = mid - 1;
+            else
+                left = mid;
         }
         if (a[left] == x)
             cout << left << endl;
         else
-            cout << -1 << endl;
+            cout << "-1" << endl;
     }
 }

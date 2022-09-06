@@ -1,11 +1,12 @@
-#include "cmath"
-#include "iostream"
+#include <iostream>
 using namespace std;
+
 const double eps = 1e-8;
 double n;
+
 bool check(double x)
 {
-    return x * x * x > n;
+    return x * x * x < n;
 }
 int main()
 {
@@ -14,14 +15,14 @@ int main()
     freopen("input.txt", "r", stdin);
 #endif
     cin >> n;
-    double left = -10000, right = 10000;
-    while (right - left > eps)
+    double l = -100, r = 100;
+    while (r - l > eps)
     {
-        double mid = (left + right) / 2;
+        double mid = (l + r) / 2;
         if (check(mid))
-            right = mid;
+            l = mid;
         else
-            left = mid;
+            r = mid;
     }
-    printf("%.6lf", left);
+    printf("%.6lf", l);
 }
