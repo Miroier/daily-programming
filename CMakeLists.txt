@@ -1,0 +1,4 @@
+cmake_minimum_required(VERSION 3.9)
+project(hellocmake LANGUAGES CXX)
+
+add_executable(a.out tmp.cpp)
