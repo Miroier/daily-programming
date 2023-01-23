@@ -1,6 +1,5 @@
 #include "iostream"
 using namespace std;
-const int N = 105;
 int n;
 int main()
 {

@@ -1,42 +1,43 @@
-#include "iostream"
+#include <iostream>
 using namespace std;
-typedef long long LL;
-const int N = 1000005;
-int prime[N], cnt;
-int phi[N]; //欧拉函数
-bool st[N];
-LL get_eulers(int n)
+using LL = long long;
+const int N = 1e6 + 5;
+int n;
+int primes[N], cnt;
+bool is_prime[N];
+int phi[N]; // 欧拉函数
+LL get_eulers(int x)
 {
+    for (int i = 2; i <= n; i++)
+        is_prime[i] = true;
     phi[1] = 1;
     for (int i = 2; i <= n; i++)
     {
-        if (!st[i])
+        if (is_prime[i])
         {
-            prime[cnt++] = i;
-            phi[i] = i - 1; //质数i的欧拉函数就是i-1
+            primes[cnt++] = i;
+            phi[i] = i - 1;
         }
-        for (int j = 0; prime[j] <= n / i; j++)
+        for (int j = 0; primes[j] <= x / i; j++)
         {
-            st[prime[j] * i] = true;
-            if (i % prime[j] == 0)
+            is_prime[i * primes[j]] = false;
+            if (i % primes[j] == 0)
             {
-                //prime[j]是i的一个质因子，欧拉函数的值只和质因子是否出现有关，和质因子出现的次数无关
-                //所以有下面这个式子
-                phi[prime[j] * i] = prime[j] * phi[i];
+                // primes[j]是i的质因子，由于phi[i]的值已经考虑了primes[j]，所以phi[i * primes[j]]的值要在phi[i]的基础上多乘一个primes[j]。
+                phi[i * primes[j]] = primes[j] * phi[i];
                 break;
             }
-            //如果不是质因子，等号左边多了prime[j]这个质因子，值要额外乘上(1-1/prime[j])这一项
-            phi[prime[j] * i] = (prime[j] - 1) * phi[i];
+            // primes[j]不是i的质因子，由于phi[i]的值没有考虑primes[j]，所以phi[i * primes[j]]的值要在phi[i]的基础上多乘一个primes[j]和(1-1/primes[j])。
+            phi[i * primes[j]] = (primes[j] - 1) * phi[i];
         }
     }
     LL res = 0;
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= x; i++)
         res += phi[i];
     return res;
 }
 int main()
 {
-    int n;
     cin >> n;
     cout << get_eulers(n) << endl;
 }
